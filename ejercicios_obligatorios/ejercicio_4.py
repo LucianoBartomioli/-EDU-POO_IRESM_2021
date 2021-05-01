@@ -1,60 +1,41 @@
-texto = ""
-texto = "hola asa dada sad asa apa SADS."
-#texto = input(str("Ingrese un texto finalizado por un punto: "))
-ultima_vocal_contador = 0
-palabras_que_terminan_y_empiezan_vocal = 0
-letra_anterior = ""
-primera_letra_vocal_true = False
-ultima_letra_vocal_true = False
-for letra in texto:
+VOCALES = 'aeiouAEIOU'
+texto = input('Ingrese el texto a analizar, separado por espacios en blanco y termina en punto: ')
 
-    if letra_anterior == " ":
-        if letra == "a":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            primera_letra_vocal_true = True
-        elif letra == "e":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            primera_letra_vocal_true = True
-        elif letra == "i":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            primera_letra_vocal_true = True
-        elif letra == "o":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            primera_letra_vocal_true = True
-        elif letra == "u":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            primera_letra_vocal_true = True
-        else:
-            primera_letra_vocal_true = False
+cont_palabras = cont_letras = cont_empieza_vocal = cont_empieza_ultima = 0
+empieza_vocal = False
+ult_car_pal = car_ant = caracter = ''
 
-    if (ultima_letra_vocal_true == True) and (primera_letra_vocal_true == True):
-        palabras_que_terminan_y_empiezan_vocal = palabras_que_terminan_y_empiezan_vocal + 1
+for caracter in texto:
+    if caracter == ' ' or caracter == '.':
+        # Fin de palabra
+        if cont_letras > 0:
+            cont_palabras += 1
+            ult_car_pal = car_ant
+            if empieza_vocal and car_ant in VOCALES:
+                cont_empieza_vocal += 1
+                empieza_vocal = False
+        cont_letras = 0
 
-    if letra == (" "):
-        if letra_anterior == "a":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            ultima_letra_vocal_true = True
-        elif letra_anterior == "e":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            ultima_letra_vocal_true = True
-        elif letra_anterior == "i":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            ultima_letra_vocal_true = True
-        elif letra_anterior == "o":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            ultima_letra_vocal_true = True
-        elif letra_anterior == "u":
-            ultima_vocal_contador = ultima_vocal_contador + 1
-            ultima_letra_vocal_true = True
+    else:
+        # Dentro de la palabra
+        cont_letras += 1
+        if cont_letras == 1:
+            if caracter in VOCALES:
+                empieza_vocal = True
+            if ult_car_pal == caracter:
+                cont_empieza_ultima += 1
+                ult_car_pal = ''
 
-        else:
-            ultima_letra_vocal_true = False
+        car_ant = caracter
 
-    primer_letra_texto = texto[0]
 
-    if letra_anterior == " ":
-        ultima_letra_vocal_true = False
-    elif letra == " ":
-        primera_letra_vocal_true = False
-    letra_anterior = letra
-print(palabras_que_terminan_y_empiezan_vocal)
+if cont_palabras > 0:
+    porcentaje = cont_empieza_vocal * 100 / cont_palabras
+
+    print('Hay', cont_empieza_vocal, 'palabras que empiezan y terminan en '
+                                     'vocales que representan el', porcentaje,
+                                     '% de palabras del texto')
+    print('Hay', cont_empieza_ultima, 'palabras que comienzan con el último '
+                                      'caracter de la palabra anterior')
+else:
+    print('No se ingresó texto a analizar')
